@@ -4,5 +4,13 @@ const rp = require('request-promise')
 const fs = require('fs');
 const path = require('path');
 
+const extPath = path.join(__dirname, 'downloads')
+const redditPosts = []
 
-
+rp('https://reddit.com/r/popular.json')
+.then (res => redditPosts.push(res))
+.then(() => {
+    fs.writeFile(extPath, JSON.stringify(redditPosts), (err) => {
+    if (err) console.log(err);
+})
+});
