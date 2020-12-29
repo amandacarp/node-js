@@ -4,13 +4,21 @@ const rp = require('request-promise')
 const fs = require('fs');
 const path = require('path');
 
-const extPath = path.join(__dirname, 'downloads')
-const redditPosts = []
+const downloadsDir = path.join(__dirname, 'downloads')
+const redditURL = 'https://reddit.com/r/popular.json'
 
-rp('https://reddit.com/r/popular.json')
-.then (res => redditPosts.push(res))
-.then(() => {
-    fs.writeFile(extPath, JSON.stringify(redditPosts), (err) => {
-    if (err) console.log(err);
-})
-});
+const fileTypes = ['gif', 'jpeg', 'jpg', 'gifv', 'png']
+
+rp(redditURL)
+    .then(redditResponse => {
+        let newData = JSON.parse(redditResponse);
+        let parsedData = newData.data.children;
+        parsedData.forEach(post => {
+            let fileExt = path.extname(post.data.url)
+            if (fileTypes.includes(fileExt)) {
+                let fileName = `${post.data.name}${fileExt}`
+                let newFile = path.join(downloadsDir, fileName)
+                rp(post.data.url).pipe(fs.createWriteStream(newFile))
+            }
+        });
+    })
