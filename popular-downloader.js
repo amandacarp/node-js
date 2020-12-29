@@ -7,7 +7,7 @@ const path = require('path');
 const downloadsDir = path.join(__dirname, 'downloads')
 const redditURL = 'https://reddit.com/r/popular.json'
 
-const fileTypes = ['gif', 'jpeg', 'jpg', 'gifv', 'png']
+const fileTypes = ['.gif', '.jpeg', '.jpg', '.gifv', '.png']
 
 rp(redditURL)
     .then(redditResponse => {
