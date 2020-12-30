@@ -6,21 +6,21 @@ const path = require('path');
 
 const redditPath = path.join(__dirname, 'popular-articles.json')
 const redditPosts = []
+const parsedPosts = []
 
 //Extract from each article title, url, and author and append to array
 rp('https://reddit.com/r/popular.json')
 .then (res => redditPosts.push(res))
 .then(() => {
     JSON.parse(redditPosts).data.children.forEach(item => {
-        fs.appendFileSync(redditPath, item.data.title + '\n', (err) => {
-            if (err) console.log(err);
-        })
-        fs.appendFileSync(redditPath, item.data.author + '\n', (err) => {
-            if (err) console.log(err);
-        })
-        fs.appendFileSync(redditPath, item.data.url + '\n', (err) => {
-            if (err) console.log(err);
-        })
+        const cleanedUpPost = {
+            title: item.data.title,
+            author: item.data.author,
+            url: item.data.url
+        }
+        parsedPosts.push(cleanedUpPost);
     });
-    
+    fs.appendFileSync(redditPath, JSON.stringify(parsedPosts), (err) => {
+        if (err) console.log(err);
 })
+});

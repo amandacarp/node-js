@@ -39,6 +39,10 @@ fs.writeFile(chirpPath, JSON.stringify(chirpArray), (err) => {
 fs.readFile(chirpPath, {
     encoding: "UTF-8"
 }, (err, data) => {
-    console.log(data)
+    if(err) {
+        console.log(err)
+    }else{
+        console.log(data)
+    }
 });
 
